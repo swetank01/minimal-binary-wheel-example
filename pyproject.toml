@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "binary-wheel-example"
+description = "A simple example of binary-compiling a Python package"
+authors = ["Mike Wilkerson"]
+readme = "README.md"
+
+version = "0.1.0"
+
+packages = [{include = "binary_wheel_example"}]
+
+# By default, exclude all files from being packaged in the wheel. We'll add
+# specific includes below.
+exclude = ["**/*"]
+
+# List of files to include in the wheel. Be careful with glob patterns like
+# "**/*" at the root of the repo; for example, "**/*.pyi" will pick up all
+# `.pyi` files from within a local `.venv/` directory, which is probably not
+# what you want.
+include = [
+  "*.bin",                           # In case you have a Linux/MacOS CLI executable
+  "*.exe",                           # In case you have a Windows CLI executable
+  "*.pyd",                           # The compiled binary extension for Windows
+  "*.so",                            # The compiled binary extension for Linux/MacOS
+  "*.pyi",                           # Python interface stub files (aids autocomplete, interface inspection)
+  "binary_wheel_example/**/*.pyi",   # Python interface stub files (aids autocomplete, interface inspection)
+  "binary_wheel_example/**/*.html",  # Example of a static filetype you may want to include
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+flask = "^2.3.2"
+
+[tool.poetry.dev-dependencies]
+Nuitka = "^1.6.1"  # Python compiler
+invoke = "^1.7.1"  # Similar to `make`, but cross-platform. Tasks defined in `tasks.py`
+mypy = "^0.981"    # Needed for stubgen command
+
+# In order for Poetry to build a wheel that has the proper ABI tags in the
+# wheel filename, we need to specify a build configuration. The build.py script
+# is just a placeholder, however, and doesn't need to do anything.
+[tool.poetry.build]
+generate-setup-file = false
+
+# This configuration pertains to the Poetry backend used during `poetry build -f wheel`
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
