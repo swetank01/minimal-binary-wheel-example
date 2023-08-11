@@ -35,12 +35,13 @@ jobs:
         version: 1.4.2
         virtualenvs-create: true
 
-    - name: Build Asenion Core
+    - name: install
       run:  |
         poetry install
 
-    - name: Build Asenion Core Binary
+    - name: Build Binary
       run:  |
+        poetry shell
         invoke build
 
     - name: Setup JFrog CLI
